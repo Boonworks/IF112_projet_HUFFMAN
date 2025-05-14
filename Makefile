@@ -1,0 +1,34 @@
+input ?= "images/image.ppm"
+
+
+naif: projet.c
+	gcc -Wall -Wextra -std=c99 -DMODE_NAIF -Dinput_file=\"$(input)\" -o naif projet.c
+	./naif
+	del /f /q naif.exe 2>nul || exit 0
+
+stats: projet.c
+	gcc -Wall -Wextra -std=c99 -DMODE_STATS -Dinput_file=\"$(input)\" -o stats projet.c
+	./stats
+	del /f /q stats.exe 2>nul || exit 0
+
+huffman: projet.c
+	gcc -Wall -Wextra -std=c99 -DMODE_HUFFMAN -Dinput_file=\"$(input)\" -o huffman projet.c
+	./huffman
+	del /f /q huffman.exe 2>nul || exit 0
+
+decompress_huffman: projet.c 
+	gcc -Wall -Wextra -std=c99 -DMODE_DECOMPRESS_HUFFMAN -o decompress projet.c
+	./decompress
+	del /f /q decompress.exe 2>nul || exit 0
+
+histo_ppm: projet.c
+	gcc -Wall -Wextra -std=c99 -DMODE_HISTO_PPM -Dinput_file=\"$(input)\" -o histoppm projet.c
+	./histoppm
+	del /f /q histoppm.exe 2>nul || exit 0
+
+clean:
+	del /f /q image_naif.hppm 2>nul || exit 0
+	del /f /q image_naif_reconstruit.ppm 2>nul || exit 0
+	del /f /q image_huffman.hppm 2>nul || exit 0
+	del /f /q image_huffman_reconstruit.ppm 2>nul || exit 0
+	del /f /q histogram.ppm 2>nul || exit 0
