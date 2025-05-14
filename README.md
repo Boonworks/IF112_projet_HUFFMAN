@@ -4,7 +4,7 @@ Ce projet implémente plusieurs méthodes de compression et d’analyse d’imag
 
 - Compression naïve
 - Compression/décompression avec Huffman
-- Analyse statistique (entropie, histogramme, longueur moyenne des codes) et visualisation d’histogrammes
+- Analyse statistique (entropie, histogramme, longueur moyenne des codes)
 
 ---
 
