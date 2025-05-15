@@ -4,7 +4,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-
 #define MAX_INTENSITY 256
 
 #ifndef input_file
@@ -131,7 +130,7 @@ void create_image_1x1()
 /*_______________________________________________NAIVE_CODES_______________________________________________*/
 void naive_codes(HuffmanTable* table) 
 {
-    for (int i = 0; i < 256; ++i) 
+    for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
         for (int bit= 7; bit>= 0; --bit) 
         {
@@ -147,9 +146,9 @@ void compress_img_naif(picture pic, const char* filename, HuffmanTable* table)
     FILE* file = fopen(filename, "wb");
     fprintf(file, "P7 %d %d 255 ", pic.width, pic.height);
 
-    for (int i = 0; i < 256; ++i) 
+    for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
-        fwrite(table->huffman[i], sizeof(char), 256, file);
+        fwrite(table->huffman[i], sizeof(char), MAX_INTENSITY, file);
     }   
 
     for (int i = 0; i < pic.width * pic.height; ++i) 
@@ -188,9 +187,9 @@ picture decompress_img_naif(const char* filename, HuffmanTable* table)
     fscanf(file, "%2s %d %d %d", header, &width, &height, &maxval);
     fgetc(file);
 
-    for (int i = 0; i < 256; ++i) 
+    for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
-        fread(table->huffman[i], sizeof(char), 256, file);
+        fread(table->huffman[i], sizeof(char), MAX_INTENSITY, file);
     }
 
     picture pic;
@@ -212,32 +211,28 @@ picture decompress_img_naif(const char* filename, HuffmanTable* table)
     return pic;
 }
 
-
 /*_______________________________________________HISTOGRAMME_______________________________________________*/
 float* histogram_img(color* pixels, int total_pixels) 
 {
-    float* hist = calloc(256, sizeof(float));
+    float* hist = calloc(MAX_INTENSITY, sizeof(float));
     for (int i = 0; i < total_pixels; ++i) 
     {
         hist[pixels[i].r]++;
         hist[pixels[i].g]++;
         hist[pixels[i].b]++;
     }
-
     float total_values = 3.0f * total_pixels;
-    for (int i = 0; i < 256; ++i) 
+    for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
         hist[i] /= total_values;
     }
-
     return hist;
 }
-
 
 /*_______________________________________________ENTROPIE_______________________________________________*/
 float entropy(float* hist) {
     float E = 0.0f;
-    for (int i = 0; i < 256; ++i) {
+    for (int i = 0; i < MAX_INTENSITY; ++i) {
         if (hist[i] > 0.0f) {
             E -= hist[i] * log2f(hist[i]);
         }
@@ -265,52 +260,51 @@ n_noeuds--;
 
 Node* create_node(unsigned char value, int freq, Node* left, Node* right) 
 {
-    Node* n = malloc(sizeof(Node));
-    n->value = value;
-    n->freq= freq;
-    n->left = left;
-    n->right = right;
-    return n;
+    Node* node = malloc(sizeof(Node));
+    node->value = value;
+    node->freq= freq;
+    node->left = left;
+    node->right = right;
+    return node;
 }
 
 void build_huffman_tree(float* histogram, Node** root) 
 {
-    Node* nodes[256];
-    int n_nodes = 0;
+    Node* node[MAX_INTENSITY];
+    int n_node = 0;
 
-    for (int i = 0; i < 256; i++) 
+    for (int i = 0; i < MAX_INTENSITY; i++) 
     {
         if (histogram[i]> 0.0f) 
         {
             int freq = (int)(histogram[i] * 1000000); // éviter les flottants
-            nodes[n_nodes++] = create_node((unsigned char)i, freq, NULL, NULL);
+            node[n_node++] = create_node((unsigned char)i, freq, NULL, NULL);
         }
     }
-    while (n_nodes > 1) 
+    while (n_node > 1) 
     {
         int min1 = -1, min2 = -1;
-        for (int i = 0; i < n_nodes; i++) 
+        for (int i = 0; i < n_node; i++) 
         {
-            if (min1 == -1 || nodes[i]->freq < nodes[min1]->freq) 
+            if (min1== -1 || node[i]->freq < node[min1]->freq) 
             {
                 min2 = min1;
                 min1 = i;
             } 
-            else if (min2 == -1 || nodes[i]->freq < nodes[min2]->freq) 
+            else if (min2== -1 || node[i]->freq < node[min2]->freq) 
             {
                 min2 = i;
             }
         }
 
-        Node* merged = create_node(0, nodes[min1]->freq + nodes[min2]->freq, nodes[min1], nodes[min2]);
+        Node* merged = create_node(0, node[min1]->freq + node[min2]->freq, node[min1], node[min2]);
 
-        nodes[min1] = merged;
-        nodes[min2] = nodes[n_nodes - 1];
-        n_nodes--;
+        node[min1]= merged;
+        node[min2]= node[n_node- 1];
+        n_node--;
     }
-    *root = nodes[0];
+    *root = node[0];
 }
-
 
 /*_______________________________________________GENERATE_HUFFMAN_CODES_______________________________________________*/
 void generate_huffman_codes(Node* root, HuffmanTable* table, char* buffer, int depth) 
@@ -333,7 +327,7 @@ void generate_huffman_codes(Node* root, HuffmanTable* table, char* buffer, int d
 float moy_length(float* histogram, HuffmanTable* table) 
 {
     float total = 0.0f;
-    for (int i = 0; i< 256; ++i) 
+    for (int i = 0; i< MAX_INTENSITY; ++i) 
     {
         if (histogram[i]> 0.0f) 
         {
@@ -355,9 +349,9 @@ void compress_img_huffman(picture pic, const char* filename, HuffmanTable* table
     }
     fprintf(file, "P7\n%d %d\n255\n", pic.width, pic.height);
 
-    for (int i = 0; i < 256; ++i) 
+    for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
-        fwrite(table->huffman[i], sizeof(char), 256, file);
+        fwrite(table->huffman[i], sizeof(char), MAX_INTENSITY, file);
     } 
     unsigned char buffer = 0; 
     int bit_count = 0;
@@ -435,8 +429,6 @@ Node* build_tree_from_table(HuffmanTable* table) {
     }
     return root;
 }
-
-
 
 picture decompress_img_huffman(const char* filename) 
 {
@@ -555,16 +547,20 @@ int main() {
 #ifdef NAIF
 
     HuffmanTable huffman ;
-    
+
+// Compression
     naive_codes(&huffman);
     compress_img_naif(pic, "image_naif.hppm", &huffman);
-    picture reconstruit = decompress_img_naif("image_naif.hppm", &huffman);
-    save_pic(reconstruit, "image_naif_reconstruit.ppm");
-    free(reconstruit.pixels);
+
+// Décompression
+    picture compression_naif = decompress_img_naif("image_naif.hppm", &huffman);
+    save_pic(compression_naif, "image_naif_reconstruit.ppm");
+
+
     printf("Compression/Decompression terminee.\n");
+    free(compression_naif.pixels);
 
-// Taille et compression
-
+// Taille
     long size_ppm = file_size(input_file);
     printf("Taille fichier PPM original : %ld octets\n", size_ppm);
     long size_hppm = file_size("image_naif.hppm");
@@ -580,21 +576,23 @@ int main() {
 
 #elif defined(STATS)
 
+// Histogramme 
     float* histogram = histogram_img(pic.pixels, pic.width * pic.height);
     for (int i = 0; i < 256; ++i) 
     {
         printf("Intensite %d : %.4f\n", i, histogram[i]);
     }
 
+// Entropie 
     float E = entropy(histogram);
     printf("Entropie : %.4f bits\n", E);
     Node* root = NULL;
     build_huffman_tree(histogram, &root);
 
+// Codes associés à l'intensité     
     HuffmanTable huffman = {.huffman = 0};
     char buffer[256];
     generate_huffman_codes(root, &huffman, buffer, 0);
-
     for (int i = 0; i < 256; ++i) 
     {
         if (huffman.huffman[i][0] != '\0') 
@@ -603,29 +601,31 @@ int main() {
         }
     }
 
+// Longueur Moyenne
     float longueur_moy = moy_length(histogram, &huffman);
     printf("Longueur moyenne des codes : %.4f bits\n", longueur_moy);
-
+    
+// Histogramme PPM
     histogram_ppm(histogram, "histogram.ppm");
     printf("Histogramme enregistre\n");
-
+    
     free(histogram);
 
 #elif defined(COMPRESS_HUFFMAN)
 
+// Compression
     float* histogram = histogram_img(pic.pixels, pic.width * pic.height);
     Node* root = NULL;
     build_huffman_tree(histogram, &root);
+
     HuffmanTable huffman = {.huffman = 0};
-    //char huffman[256][256] = {0};
     char buffer[256];
     generate_huffman_codes(root, &huffman, buffer, 0);
     compress_img_huffman(pic, "image_huffman.hppm", &huffman);
+    
     printf("Compression terminee.\n");
 
-
-// Taille et compression
-
+// Taille
     long size_ppm = file_size(input_file);
     printf("Taille fichier PPM original : %ld octets\n", size_ppm);
     long size_hppm = file_size("image_huffman.hppm");
@@ -643,18 +643,18 @@ int main() {
 
 #elif defined(DECOMPRESS_HUFFMAN)
 
-    picture reconstruit = decompress_img_huffman("image_huffman.hppm");
-    save_pic(reconstruit, "image_huffman_reconstruit.ppm");
+// Déompression
+    picture compression_huffman = decompress_img_huffman("image_huffman.hppm");
+    save_pic(compression_huffman, "image_huffman_reconstruit.ppm");
     printf("Decompression terminee.\n");
 
-    // Taille et compression
-    
+// Taille     
     long size_ppm = file_size("images/image.ppm");
     printf("Taille fichier PPM original : %ld octets\n", size_ppm);
     long size_reconstruit_ppm = file_size("image_huffman_reconstruit.ppm");
     printf("Taille fichier PPM decompresse : %ld octets\n", size_reconstruit_ppm);
 
-    free(reconstruit.pixels);
+    free(compression_huffman.pixels);
 
 #endif
     free(pic.pixels);
