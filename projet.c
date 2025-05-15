@@ -113,6 +113,21 @@ void create_image()
     free(pic.pixels);
 }
 
+void create_image_1x1() 
+{
+    int width = 1, height = 1;
+    picture pic;
+    pic.width = width;
+    pic.height = height;
+    pic.pixels = malloc(sizeof(color) * width * height);
+
+    color red = {255, 0, 0};
+    pic.pixels[0] = red;
+
+    save_pic(pic, "images/test1x1.ppm");
+    free(pic.pixels);
+}
+
 /*_______________________________________________NAIVE_CODES_______________________________________________*/
 void naive_codes(HuffmanTable* table) 
 {
@@ -533,10 +548,11 @@ void histogram_ppm(float* hist, const char* filename)
 /*_______________________________________________MAIN_______________________________________________*/
 int main() {
 
-    create_image();   //crée l'image de test et l'enregistre dans images/
+//    create_image();     //crée image.ppm de test et l'enregistre dans images/
+//    create_image_1x1(); //crée image_1x1.ppm de test et l'enregistre dans images/
     picture pic = load_pic(input_file);
 
-#ifdef MODE_NAIF
+#ifdef NAIF
 
     HuffmanTable huffman ;
     
@@ -546,7 +562,6 @@ int main() {
     save_pic(reconstruit, "image_naif_reconstruit.ppm");
     free(reconstruit.pixels);
     printf("Compression/Decompression terminee.\n");
-
 
 // Taille et compression
 
@@ -563,9 +578,7 @@ int main() {
     printf("Gain de taille : %.2f%%\n", gain);
     }
 
-
-
-#elif defined(MODE_STATS)
+#elif defined(STATS)
 
     float* histogram = histogram_img(pic.pixels, pic.width * pic.height);
     for (int i = 0; i < 256; ++i) 
@@ -577,7 +590,6 @@ int main() {
     printf("Entropie : %.4f bits\n", E);
     Node* root = NULL;
     build_huffman_tree(histogram, &root);
-
 
     HuffmanTable huffman = {.huffman = 0};
     char buffer[256];
@@ -594,9 +606,12 @@ int main() {
     float longueur_moy = moy_length(histogram, &huffman);
     printf("Longueur moyenne des codes : %.4f bits\n", longueur_moy);
 
+    histogram_ppm(histogram, "histogram.ppm");
+    printf("Histogramme enregistre\n");
+
     free(histogram);
 
-#elif defined(MODE_HUFFMAN)
+#elif defined(COMPRESS_HUFFMAN)
 
     float* histogram = histogram_img(pic.pixels, pic.width * pic.height);
     Node* root = NULL;
@@ -626,10 +641,7 @@ int main() {
 
     free(histogram);
 
-
-
-
-#elif defined(MODE_DECOMPRESS_HUFFMAN)
+#elif defined(DECOMPRESS_HUFFMAN)
 
     picture reconstruit = decompress_img_huffman("image_huffman.hppm");
     save_pic(reconstruit, "image_huffman_reconstruit.ppm");
@@ -643,14 +655,6 @@ int main() {
     printf("Taille fichier PPM decompresse : %ld octets\n", size_reconstruit_ppm);
 
     free(reconstruit.pixels);
-
-#elif defined(MODE_HISTO_PPM)
-
-    float* histogram = histogram_img(pic.pixels, pic.width * pic.height);
-    histogram_ppm(histogram, "histogram.ppm");
-    printf("Histogramme enregistre\n");
-
-    free(histogram);
 
 #endif
     free(pic.pixels);
