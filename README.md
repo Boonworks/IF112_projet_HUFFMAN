@@ -32,6 +32,8 @@ make stats input='images/arcade.ppm'
 ```
 > Affiche : l’histogramme de l’image, l’entropie, la longueur moyenne des codes de `arcade.ppm`.
 
+> Génère une image représentant visuellement l’histogramme de `arcade.ppm`.
+
 ---
 
 ### Compression Huffman
@@ -49,15 +51,6 @@ make huffman input='images/arcade.ppm'
 make decompress_huffman
 ```
 > Décompression d’une image compressée précédement avec Huffman.
-
----
-
-### Histogramme Visuel
-
-```bash
-make histo_ppm input='images/arcade.ppm'
-```
-> Génère une image représentant visuellement l’histogramme de `arcade.ppm`.
 
 ---
 
