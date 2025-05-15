@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <direct.h> //_mkdir windows
 #include <string.h>
 #include <sys/stat.h>
 
@@ -220,7 +219,7 @@ float* histogram_img(color* pixels, int total_pixels)
 }
 
 
-/*_______________________________________________Entropie_______________________________________________*/
+/*_______________________________________________ENTROPIE_______________________________________________*/
 float entropy(float* hist) {
     float E = 0.0f;
     for (int i = 0; i < 256; ++i) {
@@ -231,7 +230,7 @@ float entropy(float* hist) {
     return E;
 }
 
-/*_______________________________________________build huffman tree_______________________________________________*/
+/*_______________________________________________BUILD_HUFFMAN_TREE_______________________________________________*/
 /* void build_huffman_tree(float* histogram, Node** root) {
 Node* nodes[256]; //
 // Création des n_noeuds pour chaque intensité présente (value, freq, etc.)
@@ -298,7 +297,7 @@ void build_huffman_tree(float* histogram, Node** root)
 }
 
 
-/*_______________________________________________generate_huffman_codes_______________________________________________*/
+/*_______________________________________________GENERATE_HUFFMAN_CODES_______________________________________________*/
 void generate_huffman_codes(Node* root, HuffmanTable* table, char* buffer, int depth) 
 {
     if (!root) return;
@@ -315,7 +314,7 @@ void generate_huffman_codes(Node* root, HuffmanTable* table, char* buffer, int d
     generate_huffman_codes(root->right, table, buffer, depth+ 1);
 }
 
-/*_______________________________________________longueur moyenne des codes générés par ce codage_______________________________________________*/
+/*_______________________________________________LONGUEUR_MOYENNE_CODES_______________________________________________*/
 float moy_length(float* histogram, HuffmanTable* table) 
 {
     float total = 0.0f;
@@ -490,7 +489,7 @@ picture decompress_img_huffman(const char* filename)
 
 
 
-/*_______________________________________________TAILLE FICHIERS_______________________________________________*/
+/*_______________________________________________TAILLE_FICHIERS_______________________________________________*/
 long file_size(const char* filename) 
 {
     struct stat st;
@@ -503,7 +502,7 @@ long file_size(const char* filename)
 }
 
 
-/*_______________________________________________histogram ppm_______________________________________________*/
+/*_______________________________________________HISTOGRAMME_PPM_______________________________________________*/
 void histogram_ppm(float* hist, const char* filename) 
 {
     int width = 256, height = 256;
@@ -534,7 +533,6 @@ void histogram_ppm(float* hist, const char* filename)
 /*_______________________________________________MAIN_______________________________________________*/
 int main() {
 
-    //_mkdir("images"); //crée le dossier images/
     create_image();   //crée l'image de test et l'enregistre dans images/
     picture pic = load_pic(input_file);
 
