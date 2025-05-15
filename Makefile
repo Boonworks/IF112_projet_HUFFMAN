@@ -22,6 +22,8 @@ decompress_huffman: projet.c
 	del /f /q decompress.exe 2>nul || exit 0
 
 clean:
+	del /f /q images\image.ppm 2>nul || exit 0
+	del /f /q images\image_1x1.ppm 2>nul || exit 0
 	del /f /q image_naif.hppm 2>nul || exit 0
 	del /f /q image_naif_reconstruit.ppm 2>nul || exit 0
 	del /f /q image_huffman.hppm 2>nul || exit 0

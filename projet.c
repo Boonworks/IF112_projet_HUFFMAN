@@ -124,7 +124,7 @@ void create_image_1x1()
     color red = {255, 0, 0};
     pic.pixels[0] = red;
 
-    save_pic(pic, "images/test1x1.ppm");
+    save_pic(pic, "images/image_1x1.ppm");
     free(pic.pixels);
 }
 
@@ -548,8 +548,8 @@ void histogram_ppm(float* hist, const char* filename)
 /*_______________________________________________MAIN_______________________________________________*/
 int main() {
 
-//    create_image();     //crée image.ppm de test et l'enregistre dans images/
-//    create_image_1x1(); //crée image_1x1.ppm de test et l'enregistre dans images/
+    create_image();     //crée image.ppm de test et l'enregistre dans images/
+    create_image_1x1(); //crée image_1x1.ppm de test et l'enregistre dans images/
     picture pic = load_pic(input_file);
 
 #ifdef NAIF
