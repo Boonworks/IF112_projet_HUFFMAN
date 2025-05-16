@@ -132,7 +132,7 @@ void naive_codes(HuffmanTable* table)
 {
     for (int i = 0; i < MAX_INTENSITY; ++i) 
     {
-        for (int bit= 7; bit>= 0; --bit) 
+        for (signed char bit= 7; bit>= 0; --bit) 
         {
             table->huffman[i][7-bit]=((i>>bit)&1)?'1':'0';
         }
@@ -470,7 +470,7 @@ picture decompress_img_huffman(const char* filename)
     int c = 0;
     while (fread(&byte, 1, 1, in) == 1) 
     {
-        for (int bit = 7; bit >= 0; bit--) 
+        for (signed char bit = 7; bit >= 0; bit--) 
         {
             current = (byte & (1 << bit)) ? current->right : current->left;        
 
@@ -556,10 +556,6 @@ int main() {
     picture compression_naif = decompress_img_naif("image_naif.hppm", &huffman);
     save_pic(compression_naif, "image_naif_reconstruit.ppm");
 
-
-    printf("Compression/Decompression terminee.\n");
-    free(compression_naif.pixels);
-
 // Taille
     long size_ppm = file_size(input_file);
     printf("Taille fichier PPM original : %ld octets\n", size_ppm);
@@ -573,6 +569,10 @@ int main() {
     printf("Taux de compression : %.2f%%\n", ratio);
     printf("Gain de taille : %.2f%%\n", gain);
     }
+
+    free(compression_naif.pixels);
+    printf("Compression/Decompression terminee.\n");
+
 
 #elif defined(STATS)
 
@@ -623,8 +623,6 @@ int main() {
     generate_huffman_codes(root, &huffman, buffer, 0);
     compress_img_huffman(pic, "image_huffman.hppm", &huffman);
     
-    printf("Compression terminee.\n");
-
 // Taille
     long size_ppm = file_size(input_file);
     printf("Taille fichier PPM original : %ld octets\n", size_ppm);
@@ -640,13 +638,14 @@ int main() {
     }
 
     free(histogram);
+    printf("Compression terminee.\n");
+
 
 #elif defined(DECOMPRESS_HUFFMAN)
 
 // Déompression
     picture compression_huffman = decompress_img_huffman("image_huffman.hppm");
     save_pic(compression_huffman, "image_huffman_reconstruit.ppm");
-    printf("Decompression terminee.\n");
 
 // Taille     
     long size_ppm = file_size("images/image.ppm");
@@ -655,6 +654,8 @@ int main() {
     printf("Taille fichier PPM decompresse : %ld octets\n", size_reconstruit_ppm);
 
     free(compression_huffman.pixels);
+    printf("Decompression terminee.\n");
+
 
 #endif
     free(pic.pixels);
