@@ -9,12 +9,10 @@ Il permet également de comparer ce codage avec une version naïve, d’analyser
 ## Fonctionnalités principales
 
 -  **Création et manipulation d’images** au format `.ppm`
--  **Compression naïve** sur 8 bits fixes (sans réel gain)
+-  **Compression naïve** sur 8 bits fixes
 -  **Analyse statistique** : histogramme, entropie, longueur moyenne des codes
--  **Compression et décompression avec Huffman** :
-  - Construction dynamique d’un arbre de Huffman à partir des fréquences
-  - Génération de la table de codage optimale
-  - Écriture/lecture d’un format personnalisé `.hppm` avec entête + table + données compressées
+-  **Compression et décompression avec Huffman**
+
 
 ---
 
