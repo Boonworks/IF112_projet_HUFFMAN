@@ -36,7 +36,7 @@ Clonez le dépôt :
 
 ## Utilisation via `make`
 
-> [!Remarque] : Le fichier d’entrée par défaut est `image.ppm`. Vous pouvez en spécifier un autre avec `input=...`.
+> **Remarque** : Le fichier d’entrée par défaut est `image.ppm`. Vous pouvez en spécifier un autre avec `input=...`.
 
 
 ### ➤ Compression/Décompression aïve
