@@ -7,6 +7,15 @@ Ce projet implémente plusieurs méthodes de compression et d’analyse d’imag
 - Analyse statistique (entropie, histogramme, longueur moyenne des codes)
 
 ---
+## Installation
+
+Clonez le dépôt :
+
+   ```bash
+   git clone https://github.com/Boonworks/IF112_projet_HUFFMAN
+  ```
+
+---
 
 ## Utilisation avec `make`
 
