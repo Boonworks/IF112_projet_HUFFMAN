@@ -88,11 +88,11 @@ make clean
 
 ## Remarques
 
-    - Le Makefile utilise des macros pour activer différentes parties du programme via des blocs conditionnels dans projet.c.
+  Le Makefile utilise des macros pour activer différentes parties du programme via des blocs conditionnels dans projet.c.
 
-    - Le format HPPM est un format personnalisé contenant l’en-tête, la table de codage, et les données compressées.
+  Le format HPPM est un format personnalisé contenant l’en-tête, la table de codage, et les données compressées.
 
-    - Le projet est conçu pour fonctionner sous Windows; le Makefile adapte les commandes de suppression en conséquence.
+  Le projet est conçu pour fonctionner sous Windows; le Makefile adapte les commandes de suppression en conséquence, mais les commandes pour Linux sont commentées dans le Makefile.
 
 
 ---
