@@ -1,10 +1,27 @@
-# Projet HUFFMAN
+# Projet IF112 – Compression d’images avec Huffman
 
-Ce projet implémente plusieurs méthodes de compression et d’analyse d’images au format `.ppm` :
+Ce projet, implémente en C un système de compression d’images au format PPM, basé sur le codage de Huffman.
 
-- Compression naïve
-- Compression/décompression avec Huffman
-- Analyse statistique (entropie, histogramme, longueur moyenne des codes)
+Il permet également de comparer ce codage avec une version naïve, d’analyser statistiquement une image, et de générer des représentations visuelles (histogrammes).
+
+---
+
+## Fonctionnalités principales
+
+-  **Création et manipulation d’images** au format `.ppm`
+-  **Compression naïve** sur 8 bits fixes (sans réel gain)
+-  **Analyse statistique** : histogramme, entropie, longueur moyenne des codes
+-  **Compression et décompression avec Huffman** :
+  - Construction dynamique d’un arbre de Huffman à partir des fréquences
+  - Génération de la table de codage optimale
+  - Écriture/lecture d’un format personnalisé `.hppm` avec entête + table + données compressées
+
+---
+
+## Structure
+
+Le projet repose sur un unique fichier source `projet.c` qui regroupe toutes les fonctions.  
+La compilation est modulée par un `Makefile` permettant d’exécuter différentes parties du projet grâce à des macros de compilation.
 
 ---
 ## Installation
@@ -17,15 +34,12 @@ Clonez le dépôt :
 
 ---
 
-## Utilisation avec `make`
+## Utilisation via `make`
 
-Toutes les commandes suivantes peuvent être exécutées via `make`.
+> [!Remarque] : Le fichier d’entrée par défaut est `image.ppm`. Vous pouvez en spécifier un autre avec `input=...`.
 
-> **Remarque :** Si l'input n’est pas précisé, le fichier par défaut est `image.ppm`.
 
----
-
-### Compression/Décompression Naïve
+### ➤ Compression/Décompression aïve
 
 ```bash
 make naif input='images/arcade.ppm'
@@ -34,7 +48,7 @@ make naif input='images/arcade.ppm'
 
 ---
 
-### Statistiques
+###  ➤ Statistiques
 
 ```bash
 make stats input='images/arcade.ppm'
@@ -45,7 +59,7 @@ make stats input='images/arcade.ppm'
 
 ---
 
-### Compression Huffman
+###  ➤ Compression Huffman
 
 ```bash
 make huffman input='images/arcade.ppm'
@@ -54,7 +68,7 @@ make huffman input='images/arcade.ppm'
 
 ---
 
-### Décompression Huffman
+###  ➤ Décompression Huffman
 
 ```bash
 make decompress_huffman
@@ -63,9 +77,25 @@ make decompress_huffman
 
 ---
 
-### Nettoyage
+###  ➤ Nettoyage
 
 ```bash
 make clean
 ```
 > Supprime tous les fichiers générés, sauf les fichiers d’entrée `.ppm`.
+
+---
+
+## Remarques
+
+    - Le Makefile utilise des macros pour activer différentes parties du programme via des blocs conditionnels dans projet.c.
+
+    - Le format HPPM est un format personnalisé contenant l’en-tête, la table de codage, et les données compressées.
+
+    - Le projet est conçu pour fonctionner sous Windows; le Makefile adapte les commandes de suppression en conséquence.
+
+
+---
+Thomas Besson
+
+Projet encadré par R. Giraud – ENSEIRB-MATMECA – IF112 2024/2025
